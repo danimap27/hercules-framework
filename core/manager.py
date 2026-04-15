@@ -327,8 +327,16 @@ def do_check(cfg: dict, phase: Optional[dict] = None):
             input("\nEnter to return...")
             return "skip_all"
         if choice == "O":
-            print(f"  [OK] Will overwrite {len(done)} completed run(s).")
-            input("\nEnter to return...")
+            results_dir = cfg.get("output_dir", "./results")
+            print(f"\n  Deleting results for {len(done)} run(s)...")
+            import shutil
+            for run_id in done:
+                run_dir = Path(results_dir) / run_id
+                if run_dir.exists():
+                    shutil.rmtree(run_dir)
+                    print(f"    Removed: {run_dir}")
+            print(f"  Done. {len(done)} folder(s) deleted.")
+            input("\nEnter to continue...")
             return "overwrite_all"
         if choice == "C":
             return None
